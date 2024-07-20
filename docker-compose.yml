@@ -1,0 +1,53 @@
+
+version: '3.4'
+#for local dev with docker 
+services:
+  tensorflow:
+    image: jupyter-tensorflow:1.2.0
+    build:
+        context: .
+        dockerfile: Dockerfile
+        shm_size: "2.06gb" 
+    volumes:
+      - ./workspace:/app/workspace
+      - ./logs:/app/logs
+    working_dir: /app/workspace
+    environment:
+      - JUPYTER_TOKEN=tensorflow
+      - DISPLAY=:0 
+    ports:
+      - "8888:8888"
+      - "6006:6006"
+    ##=== cpu
+    command: >
+      bash -c "tensorboard --logdir=/app/logs --host=0.0.0.0 & 
+                jupyter-lab --port=8888 --ip=0.0.0.0 --allow-root --NotebookApp.token='' --NotebookApp.password='' --allow-root"
+    networks:
+    - airflownet
+    
+networks:
+  airflownet:
+    ##=== gpu
+    # command: bash -c "jupyter-lab --port=8888 --ip=0.0.0.0 --gpus all --allow-root"
+    # working_dir: /app/workspace
+    # environment:
+    #   - NVIDIA_VISIBLE_DEVICES="all"
+    #   - JUPYTER_TOKEN=tensorflow
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #       - driver: nvidia
+    #         device_ids: ['0']
+    #         capabilities: [gpu]
+    # restart: unless-stopped
+
+  # tensorboard:
+  #   image: tensorflow/tensorflow:latest
+  #   command: tensorboard --logdir=/app/logs
+  #   ports:
+  #     - "6006:6006"
+  #   volumes:
+  #     - ./logs:/app/logs # Same path as in the tensorflow service
+  #   depends_on:
+  #     - tensorflow
