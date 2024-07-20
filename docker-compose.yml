@@ -3,7 +3,7 @@ version: '3.4'
 #for local dev with docker 
 services:
   tensorflow:
-    image: jupyter-tensorflow:1.2.0
+    image: jupyter-tensorflow:1.2.1
     build:
         context: .
         dockerfile: Dockerfile
@@ -20,11 +20,11 @@ services:
       - "6006:6006"
     ##=== cpu
     command: >
-      bash -c "tensorboard --logdir=/app/logs --host=0.0.0.0 & 
-                jupyter-lab --port=8888 --ip=0.0.0.0 --allow-root --NotebookApp.token='' --NotebookApp.password='' --allow-root"
+      bash -c "tensorboard --logdir=/app/logs --host=0.0.0.0 --port=6006 & 
+                jupyter-lab --port=8888 --ip=0.0.0.0 --allow-root --ServerApp.token='' --ServerApp.password='' --allow-root"
     networks:
     - airflownet
-    
+
 networks:
   airflownet:
     ##=== gpu

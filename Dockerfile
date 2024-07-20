@@ -70,7 +70,7 @@ pandas>=2.0.0 \
 matplotlib \
 xlsxwriter \
 openpyxl \
-numpy \
+numpy==1.26.4 \
 jupyterlab \
 pyvirtualdisplay \
 pymysql \
@@ -82,6 +82,5 @@ tensorboard \
 deltalake \
 pydot \
 wandb
-
 
 #CMD ["jupyter-lab", "--ip='0.0.0.0'","--port=8888", "--NotebookApp.token=''", "--NotebookApp.password=''","--allow-root"]
