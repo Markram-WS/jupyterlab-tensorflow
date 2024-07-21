@@ -57,6 +57,7 @@ pip install setuptools wheel \
 pymysql \
 ipywidgets \
 tensorflow-probability \
+tensorflow \
 scikit-learn \
 pybind11 \
 cython \
