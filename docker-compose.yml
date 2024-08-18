@@ -23,13 +23,19 @@ services:
       bash -c "
         chmod -R 777 /app/logs &
         chmod -R 777 /app/workspace &
+        rm -rf /app/logs/ &
         tensorboard --logdir=/app/logs --host=0.0.0.0 --port=6006 & 
         jupyter-lab --port=8888 --ip=0.0.0.0 --allow-root --ServerApp.token='' --ServerApp.password='' --allow-root"
     networks:
     - airflownet
 
+
+
+    
+
 networks:
   airflownet:
+  
     ##=== gpu
     # command: bash -c "jupyter-lab --port=8888 --ip=0.0.0.0 --gpus all --allow-root"
     # working_dir: /app/workspace
