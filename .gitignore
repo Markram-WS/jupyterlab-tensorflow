@@ -5,7 +5,8 @@ __pycache__/
 workspaces
 # C extensions
 *.so
-
+raw/
+clickhouse_data/
 # Distribution / packaging
 tmp/
 logs/

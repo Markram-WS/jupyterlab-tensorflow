@@ -1,7 +1,37 @@
 
 version: '3.4'
 #for local dev with docker 
+x-clickhouse-common: &clickhouse-common
+  environment: &clickhouse-common-env
+      CLICKHOUSE_VOLUMNS: "/mnt/d/jupyterlab-tensorflow/clickhouse_data"
 services:
+  clickhouse:
+    environment:
+      <<: *clickhouse-common-env
+    image: clickhouse/clickhouse-server:24-alpine
+    container_name: clickhouse-server
+    ports:
+      - "8123:8123" # HTTP interface
+      - "9000:9000" # Native interface for ClickHouse clients
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse 
+  #   depends_on:
+  #     clickhouse-init:
+
+  # clickhouse-init:
+  #   environment:
+  #     <<: *clickhouse-common-env
+  #   entrypoint: /bin/bash
+  #   # yamllint disable rule:line-length
+  #   command:
+  #     - -c
+  #     - |
+  #     mkdir -p /sources/clickhouse_data 
+  #     chown -R "${CLICKHOUSE_UID}:0" /sources/{clickhouse_data}
+  #   user: "0:0"
+  #   volumes:
+  #     - ${CLICKHOUSE_VOLUMNS:-.}:/sources
+
   tensorflow:
     image: jupyter-tensorflow:1.2.1
     build:
@@ -11,6 +41,7 @@ services:
     volumes:
       - ./workspace:/app/workspace
       - ./logs:/app/logs
+      - ./raw:/app/raw
     working_dir: /app/workspace
     environment:
       - JUPYTER_TOKEN=tensorflow
@@ -30,7 +61,8 @@ services:
     - airflownet
 
 
-
+volumes :
+  clickhouse_data:
     
 
 networks:

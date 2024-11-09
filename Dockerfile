@@ -48,6 +48,23 @@ RUN apt-get update && apt-get install -y \
 # Clean up to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+
+# Download and install Python 3.12
+RUN wget https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz \
+    && tar xzf Python-3.12.0.tgz \
+    && cd Python-3.12.0 \
+    && ./configure --enable-optimizations \
+    && make -j$(nproc) \
+    && make altinstall \
+    && cd .. \
+    && rm -rf Python-3.12.0 Python-3.12.0.tgz 
+    
+# Install python3-venv and other dependencies
+RUN apt-get update && apt-get install -y \
+    python3-venv \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set environment variables for MySQL client and display
 RUN python3 -m venv /venv
 ENV PATH="/venv/bin:$PATH"
@@ -69,12 +86,10 @@ gymnasium[box2d] \
 pyarrow \
 pandas>=2.0.0 \
 matplotlib \
-xlsxwriter \
-openpyxl \
+tqdm \
 numpy==1.26.4 \
 jupyterlab \
 pyvirtualdisplay \
-pymysql \
 ray \
 keras \
 piglet \
@@ -82,6 +97,12 @@ fastparquet \
 tensorboard \
 deltalake \
 pydot \
-wandb
+wandb \
+python-dotenv \
+duckdb \
+minio \
+clickhouse-driver \
+clickhouse-connect
+
 
 #CMD ["jupyter-lab", "--ip='0.0.0.0'","--port=8888", "--NotebookApp.token=''", "--NotebookApp.password=''","--allow-root"]
